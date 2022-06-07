@@ -95,8 +95,10 @@ function actionListen(options: CliOptions, args: CliOArgs) {
     actionHelpListen(options, args);
     return;
   }
+
   // log
   output.info(`Listening to UID: ${uid}`);
+
   // start polling
   let latestSpaceItemId = "";
   const pollSpace = async () => {

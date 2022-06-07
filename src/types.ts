@@ -37,7 +37,11 @@ export interface BiliSpaceItem {
     module_stat: BiliSpaceItemModuleStat;
     module_interaction?: BiliSpaceItemModuleInteraction;
   };
-  type: "DYNAMIC_TYPE_DRAW" | "DYNAMIC_TYPE_FORWARD";
+  type:
+    | "DYNAMIC_TYPE_DRAW"
+    | "DYNAMIC_TYPE_FORWARD"
+    | "DYNAMIC_TYPE_AV"
+    | "DYNAMIC_TYPE_LIVE_RCMD";
   visible: boolean;
   orig?: BiliSpaceItem;
 }
@@ -88,7 +92,7 @@ interface BiliSpaceItemModuleDynamic {
       }[];
     };
     archive?: Record<string, unknown>; // todo
-    type: "MAJOR_TYPE_DRAW" | "MAJOR_TYPE_ARCHIVE";
+    type: "MAJOR_TYPE_DRAW" | "MAJOR_TYPE_ARCHIVE" | "MAJOR_TYPE_LIVE_RCMD";
   };
   topic?: {
     id: number;
