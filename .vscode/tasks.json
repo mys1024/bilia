@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "deno",
+      "command": "task",
+      "args": ["run"],
+      "problemMatcher": ["$deno"],
+      "label": "deno task: run"
+    },
+    {
+      "type": "deno",
+      "command": "task",
+      "args": ["run:watch"],
+      "problemMatcher": ["$deno"],
+      "label": "deno task: run:watch"
+    },
+    {
+      "type": "deno",
+      "command": "task",
+      "args": ["cache"],
+      "problemMatcher": ["$deno"],
+      "label": "deno task: cache"
+    },
+    {
+      "type": "deno",
+      "command": "task",
+      "args": ["cache:lock-write"],
+      "problemMatcher": ["$deno"],
+      "label": "deno task: cache:lock-write"
+    }
+  ]
+}
