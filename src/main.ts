@@ -116,7 +116,7 @@ function actionListen(options: CliOptions, args: CliOArgs) {
       }
       const date = new Date(spaceItem.modules.module_author.pub_ts * 1000);
       const dateStr = datetime.format(date, "yyyy-MM-dd");
-      output.log(`Start to archive ${spaceItem.id_str} (${dateStr})`);
+      output.log(`Archiving ${spaceItem.id_str} (${dateStr})`);
       archiveSpaceItem(String(outputDir), spaceItem);
     }
     latestSpaceItemId = space.items[0].id_str;
