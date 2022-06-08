@@ -2,18 +2,21 @@
 
 A bilibili archiver.
 
-## Usage:
+## Listen:
 
-```sh
-bilia <command> [options] [arguments]
 ```
+bilia-listen
+Listen to a bilibili user
 
-```sh
-bilia help <command>
+USAGE:
+    bilia listen [OPTIONS] <UID>
+
+OPTIONS:
+    -h, --help          Prints help information
+    -i, --interval      Interval (in seconds) of polling (default: 600)
+    -o, --output-dir    Output directory (default: "./output")
+    -t, --timezone      Timezone name, such as "Asia/Shanghai" (default: your local timezone)
+
+ARGS:
+    <UID>    The UID of bilibili user
 ```
-
-## Commands:
-
-- help
-
-- listen
