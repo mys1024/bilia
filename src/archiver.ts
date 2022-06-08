@@ -10,11 +10,12 @@ export async function archiveSpaceItem(
   spaceItem: BiliSpaceItem,
 ) {
   const dynamicId = spaceItem.id_str;
+  const dynamicType = spaceItem.type;
   const uid = spaceItem.modules.module_author.mid;
   const date = new Date(spaceItem.modules.module_author.pub_ts * 1000);
   const dynamicDirPath = `${outputDirPath}/${uid}/dynamic/${
     toDateString(date)
-  } ${dynamicId}`;
+  } ${dynamicId} ${dynamicType}`;
 
   // log
   log(
@@ -42,7 +43,7 @@ export async function archiveSpaceItem(
         break;
       }
       for (const item of majorDraw.items) {
-        downloadImage(item.src, `${dynamicDirPath}/majorDraw`);
+        downloadImage(item.src, `${dynamicDirPath}/major/draw`);
       }
       break;
     }

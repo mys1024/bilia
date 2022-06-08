@@ -1,7 +1,3 @@
-export type CliOptions = Record<string, boolean | number | string>;
-
-export type CliOArgs = (string | number)[];
-
 export interface BiliJsonApiBody {
   code: number;
   message: string;
