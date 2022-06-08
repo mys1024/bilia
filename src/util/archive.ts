@@ -1,9 +1,9 @@
-import type { BiliSpaceItem } from "./types.ts";
+import type { BiliSpaceItem } from "../types.ts";
 
-import { ensureDir } from "./deps.ts";
-import { downloadImage } from "./util/net.ts";
-import { toDateString } from "./util/plain.ts";
-import { log } from "./util/output.ts";
+import { ensureDir } from "../deps.ts";
+import { downloadImage } from "./net.ts";
+import { toDateString } from "./plain.ts";
+import { log } from "./output.ts";
 
 export async function archiveSpaceItem(
   outputDirPath: string,
