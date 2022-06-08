@@ -10,12 +10,14 @@ export async function delay(duration: number) {
  * Convert `Date` object to datetime `string` in ISO8601 format, with UTC offset.
  */
 export function toISOString(date?: Date) {
-  return dayjs(date).format();
+  // @ts-ignore `tz` is the timezone plugin of dayjs
+  return dayjs(date).tz().format();
 }
 
 /**
  * Convert `Date` object to date `string` (without time).
  */
 export function toDateString(date?: Date) {
-  return dayjs(date).format("YYYY-MM-DD");
+  // @ts-ignore `tz` is the timezone plugin of dayjs
+  return dayjs(date).tz().format("YYYY-MM-DD");
 }
