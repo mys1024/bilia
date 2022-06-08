@@ -1,4 +1,4 @@
-import type { BiliSpaceItem } from "../types.ts";
+import type { BiliSpaceItem } from "../types/bili.ts";
 
 import { ensureDir } from "../deps.ts";
 import { downloadImage } from "./net.ts";

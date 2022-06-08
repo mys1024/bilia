@@ -1,5 +1,5 @@
 import type { Program } from "../deps.ts";
-import type { Args } from "./types.ts";
+import type { CommandArgs } from "../types/plain.ts";
 
 import { dayjs } from "../deps.ts";
 import { error, info } from "../util/output.ts";
@@ -40,7 +40,7 @@ export function useListenCommand(program: Program) {
     });
 }
 
-function action(program: Program, args: Args) {
+function action(program: Program, args: CommandArgs) {
   // get and check options
   const interval = args["interval"] ?? 600;
   if (typeof interval !== "number") {

@@ -1,4 +1,4 @@
-import type { BiliJsonApiBody, BiliSpace } from "../types.ts";
+import type { BiliJsonApiBody, BiliSpace } from "../types/bili.ts";
 import { ensureDir } from "../deps.ts";
 
 export async function downloadImage(url: string, destinationDir: string) {
