@@ -1,7 +1,7 @@
 import type { CliOArgs, CliOptions } from "./types.ts";
 
-import { datetime, flags } from "./deps.ts";
-import output from "./util/output.ts";
+import { flags } from "./deps.ts";
+import { info } from "./util/output.ts";
 import { getSpace } from "./api.ts";
 import { archiveSpaceItem } from "./archiver.ts";
 
@@ -97,7 +97,7 @@ function actionListen(options: CliOptions, args: CliOArgs) {
   }
 
   // log
-  output.info(`Listening to UID: ${uid}`);
+  info(`Listening to UID: ${uid}`);
 
   // start polling
   let latestSpaceItemId = "";
@@ -114,9 +114,6 @@ function actionListen(options: CliOptions, args: CliOArgs) {
       if (spaceItem.id_str === latestSpaceItemId) {
         break;
       }
-      const date = new Date(spaceItem.modules.module_author.pub_ts * 1000);
-      const dateStr = datetime.format(date, "yyyy-MM-dd");
-      output.log(`Archiving ${spaceItem.id_str} (${dateStr})`);
       archiveSpaceItem(String(outputDir), spaceItem);
     }
     latestSpaceItemId = space.items[0].id_str;

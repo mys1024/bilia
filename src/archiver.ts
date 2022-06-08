@@ -1,7 +1,9 @@
 import type { BiliSpaceItem } from "./types.ts";
 
-import { datetime, fs } from "./deps.ts";
-import { downloadImage } from "./util/normal.ts";
+import { ensureDir } from "./deps.ts";
+import { downloadImage } from "./util/net.ts";
+import { toDateString } from "./util/plain.ts";
+import { log } from "./util/output.ts";
 
 export async function archiveSpaceItem(
   outputDirPath: string,
@@ -9,14 +11,18 @@ export async function archiveSpaceItem(
 ) {
   const dynamicId = spaceItem.id_str;
   const uid = spaceItem.modules.module_author.mid;
-  const date = datetime.format(
-    new Date(spaceItem.modules.module_author.pub_ts * 1000),
-    "yyyy-MM-dd",
+  const date = new Date(spaceItem.modules.module_author.pub_ts * 1000);
+  const dynamicDirPath = `${outputDirPath}/${uid}/dynamic/${
+    toDateString(date)
+  } ${dynamicId}`;
+
+  // log
+  log(
+    `Archiving ${spaceItem.id_str}, type: ${spaceItem.type}`,
   );
-  const dynamicDirPath = `${outputDirPath}/${uid}/dynamic/${date} ${dynamicId}`;
 
   // archive raw json
-  await fs.ensureDir(dynamicDirPath);
+  await ensureDir(dynamicDirPath);
   await Deno.writeTextFile(
     `${dynamicDirPath}/raw.json`,
     JSON.stringify(spaceItem, undefined, 2),

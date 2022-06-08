@@ -1,9 +1,9 @@
 import { colors } from "../deps.ts";
-import { timeString } from "./normal.ts";
+import { toISOString } from "./plain.ts";
 
 export const info = (message: string) => {
   console.info(
-    colors.gray(timeString()),
+    colors.gray(toISOString()),
     colors.white(colors.bgBlue(" INFO ")),
     message,
   );
@@ -11,7 +11,7 @@ export const info = (message: string) => {
 
 export const warn = (message: string) => {
   console.warn(
-    colors.gray(timeString()),
+    colors.gray(toISOString()),
     colors.black(colors.bgYellow(" WARN ")),
     message,
   );
@@ -19,7 +19,7 @@ export const warn = (message: string) => {
 
 export const error = (message: string) => {
   console.error(
-    colors.gray(timeString()),
+    colors.gray(toISOString()),
     colors.white(colors.bgRed(" ERR  ")),
     message,
   );
@@ -27,17 +27,8 @@ export const error = (message: string) => {
 
 export const log = (message: string) => {
   console.log(
-    colors.gray(timeString()),
+    colors.gray(toISOString()),
     colors.black(colors.bgWhite(" LOG  ")),
     message,
   );
 };
-
-const output = {
-  info,
-  warn,
-  error,
-  log,
-};
-
-export default output;
