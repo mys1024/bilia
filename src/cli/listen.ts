@@ -4,6 +4,7 @@ import type { CommandArgs } from "../types/plain.ts";
 import { dayjs, ensureFile } from "../deps.ts";
 import { error, errorWithoutTime, info, log } from "../util/output.ts";
 import { getSpace } from "../util/net.ts";
+import { setImmediateInterval } from "../util/plain.ts";
 import { archiveSpaceItem } from "../util/archive.ts";
 
 export function useListenCommand(program: Program) {
@@ -103,7 +104,7 @@ async function action(program: Program, args: CommandArgs) {
   }
 
   // start polling
-  const pollSpace = async () => {
+  setImmediateInterval(async () => {
     // get space data
     const space = await getSpace(uid)
       .catch((err) => {
@@ -152,7 +153,5 @@ async function action(program: Program, args: CommandArgs) {
         error(`Fail to save metadata file "${metadataFilePath}":`, err);
       }
     }
-  };
-  pollSpace();
-  setInterval(pollSpace, interval * 1000);
+  }, interval * 1000);
 }
