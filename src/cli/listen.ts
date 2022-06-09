@@ -1,8 +1,8 @@
 import type { Program } from "../deps.ts";
 import type { CommandArgs } from "../types/plain.ts";
 
-import { dayjs } from "../deps.ts";
-import { error, errorWithoutTime, info } from "../util/output.ts";
+import { dayjs, ensureFile } from "../deps.ts";
+import { error, errorWithoutTime, info, log } from "../util/output.ts";
 import { getSpace } from "../util/net.ts";
 import { archiveSpaceItem } from "../util/archive.ts";
 
@@ -40,7 +40,7 @@ export function useListenCommand(program: Program) {
     });
 }
 
-function action(program: Program, args: CommandArgs) {
+async function action(program: Program, args: CommandArgs) {
   // get and check options
   const interval = args["interval"] ?? 600;
   if (typeof interval !== "number") {
@@ -83,8 +83,26 @@ function action(program: Program, args: CommandArgs) {
   // log
   info(`Listening to UID: ${uid}`);
 
+  // default metadata
+  const metadata = {
+    latestTimestamp: Date.now(),
+  };
+
+  // try to recover metadata from `meta.json`
+  const metadataFilePath = `${outputDir}/${uid}/meta.json`;
+  try {
+    await ensureFile(metadataFilePath);
+    const metadataStr = await Deno.readTextFile(metadataFilePath);
+    if (metadataStr) {
+      log(`Read metadata file "${metadataFilePath}"`);
+      Object.assign(metadata, JSON.parse(metadataStr));
+    }
+  } catch (err) {
+    error(`Fail to read metadata file "${metadataFilePath}":`, err);
+    Deno.exit();
+  }
+
   // start polling
-  let latestSpaceItemId = "";
   const pollSpace = async () => {
     // get space data
     const space = await getSpace(uid)
@@ -94,22 +112,46 @@ function action(program: Program, args: CommandArgs) {
     if (!space) {
       return;
     }
-    // sort space items
+    // handle the case of no space item
     const spaceItems = space.items;
     if (spaceItems.length === 0) {
       return;
     }
+    // sort space items by timestamp
     spaceItems.sort((a, b) =>
       b.modules.module_author.pub_ts - a.modules.module_author.pub_ts
     );
     // archive space items
     for (const spaceItem of spaceItems) {
-      if (spaceItem.id_str === latestSpaceItemId) {
+      const timestamp = spaceItem.modules.module_author.pub_ts * 1000;
+      if (timestamp <= metadata.latestTimestamp) {
         break;
       }
-      archiveSpaceItem(outputDir, spaceItem);
+      try {
+        await archiveSpaceItem(outputDir, spaceItem);
+      } catch (err) {
+        error(`Fail to archive bilibili space item ${spaceItem.id_str}:`, err);
+      }
     }
-    latestSpaceItemId = space.items[0].id_str;
+    // update metadata
+    let metadataUpdated = false;
+    const firstItem = spaceItems[0];
+    const firstTimestamp = firstItem.modules.module_author.pub_ts * 1000;
+    if (firstTimestamp > metadata.latestTimestamp) {
+      metadata.latestTimestamp = firstTimestamp;
+      metadataUpdated = true;
+    }
+    // save metadata file
+    if (metadataUpdated) {
+      try {
+        await Deno.writeTextFile(
+          metadataFilePath,
+          JSON.stringify(metadata, undefined, 2),
+        );
+      } catch (err) {
+        error(`Fail to save metadata file "${metadataFilePath}":`, err);
+      }
+    }
   };
   pollSpace();
   setInterval(pollSpace, interval * 1000);

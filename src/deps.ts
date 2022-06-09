@@ -1,6 +1,6 @@
 export * as colors from "https://deno.land/std@0.142.0/fmt/colors.ts";
 
-export { ensureDir } from "https://deno.land/std@0.142.0/fs/mod.ts";
+export { ensureDir, ensureFile } from "https://deno.land/std@0.142.0/fs/mod.ts";
 
 export { Program } from "https://deno.land/x/program@0.1.6/mod.ts";
 
