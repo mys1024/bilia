@@ -34,6 +34,7 @@ export interface BiliSpaceItem {
     module_interaction?: BiliSpaceItemModuleInteraction;
   };
   type:
+    | "DYNAMIC_TYPE_WORD"
     | "DYNAMIC_TYPE_DRAW"
     | "DYNAMIC_TYPE_FORWARD"
     | "DYNAMIC_TYPE_AV"

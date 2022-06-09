@@ -31,6 +31,14 @@ export async function archiveSpaceItem(
 
   // special archiving
   switch (spaceItem.type) {
+    case "DYNAMIC_TYPE_WORD": {
+      // archive dynamic's desc
+      const text = spaceItem.modules.module_dynamic.desc?.text;
+      if (text) {
+        await Deno.writeTextFile(`${dynamicDirPath}/desc.txt`, text);
+      }
+      break;
+    }
     case "DYNAMIC_TYPE_DRAW": {
       // archive dynamic's desc
       const text = spaceItem.modules.module_dynamic.desc?.text;
