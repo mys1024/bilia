@@ -20,3 +20,8 @@ OPTIONS:
 ARGS:
     <UID>    The UID of bilibili user
 ```
+
+## Docker image
+
+Docker Hub:
+[https://hub.docker.com/repository/docker/mys1024/bilia](https://hub.docker.com/repository/docker/mys1024/bilia)
