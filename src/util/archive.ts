@@ -3,7 +3,7 @@ import type { BiliSpaceItem } from "../types/bili.ts";
 import { ensureDir } from "../deps.ts";
 import { downloadImage } from "./net.ts";
 import { toDateString } from "./plain.ts";
-import { log } from "./output.ts";
+import { error, log } from "./output.ts";
 
 export async function archiveSpaceItem(
   outputDirPath: string,
@@ -43,7 +43,10 @@ export async function archiveSpaceItem(
         break;
       }
       for (const item of majorDraw.items) {
-        downloadImage(item.src, `${dynamicDirPath}/major/draw`);
+        downloadImage(item.src, `${dynamicDirPath}/major/draw`)
+          .catch((err) => {
+            error(`Fail to download image "${item.src}":`, err);
+          });
       }
       break;
     }

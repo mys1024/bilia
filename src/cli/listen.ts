@@ -2,7 +2,7 @@ import type { Program } from "../deps.ts";
 import type { CommandArgs } from "../types/plain.ts";
 
 import { dayjs } from "../deps.ts";
-import { error, info } from "../util/output.ts";
+import { error, errorWithoutTime, info } from "../util/output.ts";
 import { getSpace } from "../util/net.ts";
 import { archiveSpaceItem } from "../util/archive.ts";
 
@@ -44,32 +44,32 @@ function action(program: Program, args: CommandArgs) {
   // get and check options
   const interval = args["interval"] ?? 600;
   if (typeof interval !== "number") {
-    error(`Option "interval" should be a number\n`, false);
+    errorWithoutTime(`Option "interval" should be a number\n`);
     program.commands["listen"].help();
     return;
   }
   const outputDir = args["output-dir"] ?? "./output";
   if (typeof outputDir !== "string") {
-    error(`Option "output-dir" should be a string\n`, false);
+    errorWithoutTime(`Option "output-dir" should be a string\n`);
     program.commands["listen"].help();
     return;
   }
   const timezone = args["timezone"];
   if (typeof timezone !== "undefined" && typeof timezone !== "string") {
-    error(`Option "timezone" should be a string\n`, false);
+    errorWithoutTime(`Option "timezone" should be a string\n`);
     program.commands["listen"].help();
     return;
   }
 
   // get and check arguments
   if (args._.length != 1) {
-    error(`Too many arguments\n`, false);
+    errorWithoutTime(`Too many arguments\n`);
     program.commands["listen"].help();
     return;
   }
   const uid = args._[0];
   if (typeof uid !== "number") {
-    error(`Argument "UID" should be a number\n`, false);
+    errorWithoutTime(`Argument "UID" should be a number\n`);
     program.commands["listen"].help();
     return;
   }
@@ -86,7 +86,15 @@ function action(program: Program, args: CommandArgs) {
   // start polling
   let latestSpaceItemId = "";
   const pollSpace = async () => {
-    const space = await getSpace(uid);
+    // get space data
+    const space = await getSpace(uid)
+      .catch((err) => {
+        error("Fail to get bilibili space data:", err);
+      });
+    if (!space) {
+      return;
+    }
+    // sort space items
     const spaceItems = space.items;
     if (spaceItems.length === 0) {
       return;
@@ -94,6 +102,7 @@ function action(program: Program, args: CommandArgs) {
     spaceItems.sort((a, b) =>
       b.modules.module_author.pub_ts - a.modules.module_author.pub_ts
     );
+    // archive space items
     for (const spaceItem of spaceItems) {
       if (spaceItem.id_str === latestSpaceItemId) {
         break;
